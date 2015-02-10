@@ -1,0 +1,39 @@
+#!/bin/sh
+
+if [ $# -lt 2 ]; then
+	echo 'Script to easily convert Window Buttons themes to Xfce4-Namebar.'
+	echo 'Usage: convert-wb-to-nb <source dir> <dest dir>'
+	echo 'Example: convert-wb-to-nb \
+	/usr/share/windowbuttons/themes/ambiance-x-studio
+	~/.local/share/namebar/themes/ambiance-x-studio'
+	exit 1
+fi
+
+SOURCEDIR=$1
+DESTDIR=$2
+
+mkdir -p $DESTDIR/active $DESTDIR/passive
+cp $SOURCEDIR/close-focused.png $DESTDIR/active/close_normal.png
+cp $SOURCEDIR/close-hover.png $DESTDIR/active/close_prelight.png
+cp $SOURCEDIR/close-clicked.png $DESTDIR/active/close_pressed.png
+cp $SOURCEDIR/maximize-focused.png $DESTDIR/active/maximize_normal.png
+cp $SOURCEDIR/maximize-hover.png $DESTDIR/active/maximize_prelight.png
+cp $SOURCEDIR/maximize-clicked.png $DESTDIR/active/maximize_pressed.png
+cp $SOURCEDIR/minimize-focused.png $DESTDIR/active/minimize_normal.png
+cp $SOURCEDIR/minimize-hover.png $DESTDIR/active/minimize_prelight.png
+cp $SOURCEDIR/minimize-clicked.png $DESTDIR/active/minimize_pressed.png
+cp $SOURCEDIR/unmaximize-focused.png $DESTDIR/active/restore_normal.png
+cp $SOURCEDIR/unmaximize-hover.png $DESTDIR/active/restore_prelight.png
+cp $SOURCEDIR/unmaximize-clicked.png $DESTDIR/active/restore_pressed.png
+cp $SOURCEDIR/close-unfocused.png $DESTDIR/passive/close_normal.png
+cp $SOURCEDIR/close-hover.png $DESTDIR/passive/close_prelight.png
+cp $SOURCEDIR/close-clicked.png $DESTDIR/passive/close_pressed.png
+cp $SOURCEDIR/maximize-unfocused.png $DESTDIR/passive/maximize_normal.png
+cp $SOURCEDIR/maximize-hover.png $DESTDIR/passive/maximize_prelight.png
+cp $SOURCEDIR/maximize-clicked.png $DESTDIR/passive/maximize_pressed.png
+cp $SOURCEDIR/minimize-unfocused.png $DESTDIR/passive/minimize_normal.png
+cp $SOURCEDIR/minimize-hover.png $DESTDIR/passive/minimize_prelight.png
+cp $SOURCEDIR/minimize-clicked.png $DESTDIR/passive/minimize_pressed.png
+cp $SOURCEDIR/unmaximize-unfocused.png $DESTDIR/passive/restore_normal.png
+cp $SOURCEDIR/unmaximize-hover.png $DESTDIR/passive/restore_prelight.png
+cp $SOURCEDIR/unmaximize-clicked.png $DESTDIR/passive/restore_pressed.png

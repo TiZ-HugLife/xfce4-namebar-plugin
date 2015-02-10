@@ -1,0 +1,6 @@
+build
+.waf*
+.lock-waf*build
+*.geany
+xfce4-namebar-plugin*.tar.bz2
+xfce4-namebar-plugin*.deb

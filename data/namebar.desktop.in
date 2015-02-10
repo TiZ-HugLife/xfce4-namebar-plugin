@@ -1,0 +1,9 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+Name=Namebar
+Comment=Titlebar functionality for the panel
+Icon=@PREFIX@/pixmaps/xfce4-namebar.png
+X-XFCE-Unique=false
+X-XFCE-Module=namebar
+X-XFCE-Internal=false
