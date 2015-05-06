@@ -379,7 +379,8 @@ public class NamebarPlugin : PanelPlugin {
                 for (uint i = window_stack.length() - 1; i >= 1; i--) {
                     // Check the window, and if it fits, set it.
                     Wnck.Window w = window_stack.nth_data(i);
-                    if (w.is_maximized() &&
+                    if (w.get_workspace() == screen.get_active_workspace() &&
+                      w.is_maximized() &&
                       !w.is_minimized() &&
                       !w.is_skip_tasklist() &&
                       (w.get_window_type() == Wnck.WindowType.NORMAL ||
