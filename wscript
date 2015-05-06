@@ -22,7 +22,7 @@
 
 # For creating a source archive.
 APPNAME = 'xfce4-namebar-plugin'
-VERSION = '0.3.1'
+VERSION = '0.3.2'
 
 # Required waf stuff.
 top = '.'
@@ -60,7 +60,7 @@ def build (ctx):
 		source       = ctx.path.ant_glob('src/*'),
 		packages     = 'glib-2.0 gtk+-2.0 libxfce4panel-1.0 libwnck-1.0',
 		target       = 'namebar',
-		install_path = '${PREFIX}/lib/xfce4/panel-plugins/',
+		install_path = '${PREFIX}/lib/xfce4/panel/plugins/',
 		uselib       = 'GLIB GTK XFCE4PANEL LIBWNCK',
 		defines      = ['WNCK_I_KNOW_THIS_IS_UNSTABLE'])
 	
