@@ -264,6 +264,7 @@ public class NamebarPlugin : PanelPlugin {
 
         // Connect signals.
         screen.active_window_changed.connect(active_window_changed);
+        screen.active_workspace_changed.connect(active_window_changed);
         screen.window_closed.connect((s) => {
             if (s == shown_window) {
                 find_window_to_show();
