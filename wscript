@@ -22,7 +22,7 @@
 
 # For creating a source archive.
 APPNAME = 'xfce4-namebar-plugin'
-VERSION = '0.3.2'
+VERSION = '0.3.3'
 
 # Required waf stuff.
 top = '.'

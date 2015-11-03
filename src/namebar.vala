@@ -323,6 +323,7 @@ public class NamebarPlugin : PanelPlugin {
             shown_window.name_changed.disconnect(shown_name_changed);
             shown_window.icon_changed.disconnect(shown_icon_changed);
             shown_window.state_changed.disconnect(shown_state_changed);
+            shown_window.workspace_changed.disconnect(shown_state_changed);
         }
 
         // Set the window.
@@ -332,6 +333,7 @@ public class NamebarPlugin : PanelPlugin {
         shown_window.name_changed.connect(shown_name_changed);
         shown_window.icon_changed.connect(shown_icon_changed);
         shown_window.state_changed.connect(shown_state_changed);
+        shown_window.workspace_changed.connect(shown_state_changed);
 
         // Reset attributes.
         shown_name_changed();
@@ -349,6 +351,7 @@ public class NamebarPlugin : PanelPlugin {
             shown_window.name_changed.disconnect(shown_name_changed);
             shown_window.icon_changed.disconnect(shown_icon_changed);
             shown_window.state_changed.disconnect(shown_state_changed);
+            shown_window.workspace_changed.disconnect(shown_state_changed);
         }
 
         // Set window to null.
@@ -480,6 +483,7 @@ public class NamebarPlugin : PanelPlugin {
         // Disconnect state change event from old window.
         if (active_window != null) {
             active_window.state_changed.disconnect(active_state_changed);
+            active_window.workspace_changed.disconnect(active_state_changed);
         }
 
         // Set active window, check it, and reconnect the event.
@@ -488,6 +492,7 @@ public class NamebarPlugin : PanelPlugin {
           (active_window.get_window_type() == Wnck.WindowType.NORMAL ||
           active_window.get_window_type() == Wnck.WindowType.DIALOG)) {
             active_window.state_changed.connect(active_state_changed);
+            active_window.workspace_changed.connect(active_state_changed);
         }
 
         // For posterity, find a window to show.
