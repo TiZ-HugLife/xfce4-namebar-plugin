@@ -78,7 +78,7 @@ def build (ctx):
 		cwd = data_dir,
 		relative_trick = True)
 	ctx.install_files(
-		'${PREFIX}/share/xfce4/panel-plugins/',
+		'${PREFIX}/share/xfce4/panel/plugins/',
 		'data/namebar.desktop')
 	ctx.install_files(
 		'${PREFIX}/share/pixmaps/',
