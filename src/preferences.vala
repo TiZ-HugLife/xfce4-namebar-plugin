@@ -218,7 +218,8 @@ class PrefDialog : Dialog {
             namebar.align = (uint8)align_combo.active;
         });
         custom_check.toggled.connect(() => {
-            if (custom_check.active) {
+            namebar.custom_colors = custom_check.active;
+            if (namebar.custom_colors) {
                 Pango.Color new_color = Pango.Color();
                 new_color.red = active_color.color.red;
                 new_color.green = active_color.color.green;
