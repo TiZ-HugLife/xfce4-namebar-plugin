@@ -6,4 +6,5 @@ Comment=Titlebar functionality for the panel
 Icon=xfce4-namebar
 X-XFCE-Unique=false
 X-XFCE-Module=namebar
+X-XFCE-Module-Path=@PREFIX@/lib/xfce4/panel/plugins/
 X-XFCE-Internal=false
