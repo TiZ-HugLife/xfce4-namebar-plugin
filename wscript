@@ -20,27 +20,17 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# For creating a source archive.
 APPNAME = 'xfce4-namebar-plugin'
-VERSION = '0.3.3'
+VERSION = '0.3.4'
 
-# Required waf stuff.
 top = '.'
 out = 'build'
 
 def options (ctx):
-	ctx.load('compiler_c')
-	ctx.load('vala')
+	ctx.load('compiler_c vala')
 
 def configure (ctx):
-	# Strip extraneous slash from prefix.
-	if ctx.options.prefix[-1] == '/' :
-		ctx.options.prefix += ctx.options.prefix[-1]
-	
-	# Check for required stuff.
-	ctx.load('compiler_c misc')
-	ctx.load('vala', funs='')
-	ctx.check_vala(min_version=(0, 12, 0), branch=(0, 12))
+	ctx.load('compiler_c vala')
 	args = '--cflags --libs'
 	ctx.check_cfg(package = 'glib-2.0', atleast_version = '2.10',
 		uselib_store = 'GLIB', mandatory = True, args = args)
@@ -52,25 +42,21 @@ def configure (ctx):
 		uselib_store = 'LIBWNCK', mandatory = True, args = args)
 
 def build (ctx):
-	# Compile the program.
-	ctx.program(
+	ctx.shlib(
 		features     = 'c cshlib',
-		is_lib       = True,
 		vapi_dirs    = 'vapi',
 		source       = ctx.path.ant_glob('src/*'),
 		packages     = 'glib-2.0 gtk+-2.0 libxfce4panel-1.0 libwnck-1.0',
 		target       = 'namebar',
-		install_path = '${PREFIX}/lib/xfce4/panel/plugins/',
+		install_path = '${LIBDIR}/xfce4/panel/plugins/',
 		uselib       = 'GLIB GTK XFCE4PANEL LIBWNCK',
 		defines      = ['WNCK_I_KNOW_THIS_IS_UNSTABLE'])
 	
-	# Substitute the prefix in the desktop file.
 	ctx(
 		features = 'subst',
 		source = 'data/namebar.desktop.in',
 		target = 'data/namebar.desktop')
 	
-	# Install the files.
 	data_dir = ctx.path.find_dir('data')
 	ctx.install_files(
 		'${PREFIX}/share/namebar/',
