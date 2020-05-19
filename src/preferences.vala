@@ -141,13 +141,15 @@ class PrefDialog : Dialog {
         active_label.set_alignment(0.0f, 0.5f);
         active_color = new ColorButton();
         var active_reset = new Button();
-        active_reset.add(new Image.from_icon_name("clear", IconSize.BUTTON));
+        active_reset.add(
+         new Image.from_icon_name("edit-clear", IconSize.BUTTON));
         active_check = new CheckButton.with_label("Bold");
         var passive_label = new Label("Passive color:");
         passive_label.set_alignment(0.0f, 0.5f);
         passive_color = new ColorButton();
         var passive_reset = new Button();
-        passive_reset.add(new Image.from_icon_name("clear", IconSize.BUTTON));
+        passive_reset.add(
+         new Image.from_icon_name("edit-clear", IconSize.BUTTON));
         passive_check = new CheckButton.with_label("Bold");
         color_grid.attach(active_label, 0, 1);
         color_grid.attach(active_color, 1, 1);
