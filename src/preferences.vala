@@ -149,14 +149,14 @@ class PrefDialog : Dialog {
         var passive_reset = new Button();
         passive_reset.add(new Image.from_icon_name("clear", IconSize.BUTTON));
         passive_check = new CheckButton.with_label("Bold");
-        color_grid.attach(active_label, 0, 1, 0, 1);
-        color_grid.attach(active_color, 1, 2, 0, 1);
-        color_grid.attach(active_reset, 2, 3, 0, 1);
-        color_grid.attach(active_check, 3, 4, 0, 1);
-        color_grid.attach(passive_label, 0, 1, 1, 2);
-        color_grid.attach(passive_color, 1, 2, 1, 2);
-        color_grid.attach(passive_reset, 2, 3, 1, 2);
-        color_grid.attach(passive_check, 3, 4, 1, 2);
+        color_grid.attach(active_label, 0, 1);
+        color_grid.attach(active_color, 1, 1);
+        color_grid.attach(active_reset, 2, 1);
+        color_grid.attach(active_check, 3, 1);
+        color_grid.attach(passive_label, 0, 2);
+        color_grid.attach(passive_color, 1, 2);
+        color_grid.attach(passive_reset, 2, 2);
+        color_grid.attach(passive_check, 3, 2);
         content.pack_start(color_grid, false, false, 0);
 
         // Get current settings.
