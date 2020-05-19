@@ -34,11 +34,11 @@ def configure (ctx):
 	args = '--cflags --libs'
 	ctx.check_cfg(package = 'glib-2.0', atleast_version = '2.62',
 		uselib_store = 'GLIB', mandatory = True, args = args)
-	ctx.check_cfg(package = 'gtk+-3.0', atleast_version = '3.24',
+	ctx.check_cfg(package = 'gtk+-3.0', atleast_version = '3.22',
 		uselib_store = 'GTK', mandatory = True, args = args)
 	ctx.check_cfg(package = 'libxfce4panel-2.0', atleast_version = '4.12',
 		uselib_store = 'XFCE4PANEL', mandatory = True, args = args)
-	ctx.check_cfg(package = 'libwnck-3.0', atleast_version = '3.24',
+	ctx.check_cfg(package = 'libwnck-3.0', atleast_version = '3.22',
 		uselib_store = 'LIBWNCK', mandatory = True, args = args)
 
 def build (ctx):

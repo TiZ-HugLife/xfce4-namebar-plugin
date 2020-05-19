@@ -25,9 +25,9 @@ So until packages start to appear, you get to install from source. You need the 
 
 * Vala >= 0.12
 * GLib >= 2.62
-* GTK+3 >= 3.24
+* GTK+3 >= 3.22
 * Xfce4-Panel >= 4.12
-* Libwnck >= 3.24
+* Libwnck >= 3.22
 
 To configure, build, and install, run these commands:
 
