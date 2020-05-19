@@ -44,21 +44,21 @@ public class NamebarPlugin : PanelPlugin {
     // Properties
     ///////////////////
 
-    public bool   only_max        { get; set; default = true; }
-    public bool   hide_max        { get; set; default = false; }
-    public bool   hide_min        { get; set; default = false; }
-    public bool   hide_close      { get; set; default = false; }
-    public bool   hide_icon       { get; set; default = false; }
-    public bool   hide_title      { get; set; default = false; }
-    public int    nb_size            { get; set; default = 240; }
-    public bool   nb_expand          { get; set; default = true; }
-    public uint8  align           { get; set; default = 1; }
-    public bool   active_bold     { get; set; default = true; }
-    public bool   passive_bold    { get; set; default = true; }
-    public bool   custom_colors   { get; set; default = true; }
-    public Gdk.RGBA   active_color    { get; set; }
-    public Gdk.RGBA   passive_color   { get; set; }
-    public Theme  theme           { get; set; }
+    public bool      only_max        { get; set; default = true; }
+    public bool      hide_max        { get; set; default = false; }
+    public bool      hide_min        { get; set; default = false; }
+    public bool      hide_close      { get; set; default = false; }
+    public bool      hide_icon       { get; set; default = false; }
+    public bool      hide_title      { get; set; default = false; }
+    public int       nb_size            { get; set; default = 240; }
+    public bool      nb_expand          { get; set; default = true; }
+    public uint8     align           { get; set; default = 1; }
+    public bool      active_bold     { get; set; default = true; }
+    public bool      passive_bold    { get; set; default = true; }
+    public bool      custom_colors   { get; set; default = true; }
+    public Gdk.RGBA  active_color    { get; set; }
+    public Gdk.RGBA  passive_color   { get; set; }
+    public Theme     theme           { get; set; }
 
     public Gdk.RGBA active_default { get {
         return get_style_context().get_color(StateFlags.NORMAL);
@@ -104,7 +104,7 @@ public class NamebarPlugin : PanelPlugin {
         passive_color = passive_default;
 
         // Load settings from the rc file.
-        KeyFile keyfile = new KeyFile();
+        var keyfile = new KeyFile();
         try {
             // Load the default config.
             keyfile.load_from_data("""
@@ -156,17 +156,17 @@ public class NamebarPlugin : PanelPlugin {
             }
             theme = new Theme(File.new_for_path(theme_path));
         } catch {
-            stdout.printf("Couldn't load configuration.\n");
+            stderr.printf("Couldn't load configuration.\n");
         }
 
         // If no theme was loaded while loading configuration...
         if (theme == null || theme.valid == false) {
             // Look for the default theme.
-            string[] dirs = Environment.get_system_data_dirs();
+            var dirs = Environment.get_system_data_dirs();
             dirs += Environment.get_user_data_dir();
             var theme_loaded = false;
-            for (uint8 i = 0; i < dirs.length && !theme_loaded; i++) {
-                File tf = File.new_for_path(dirs[i]).get_child(
+            for (var i = 0; i < dirs.length && !theme_loaded; i++) {
+                var tf = File.new_for_path(dirs[i]).get_child(
                   "namebar/themes/Default");
                 if (tf.query_exists(null)) {
                     theme = new Theme(tf);
@@ -176,7 +176,7 @@ public class NamebarPlugin : PanelPlugin {
 
             // If it didn't load, show an error message.
             if (!theme_loaded) {
-                MessageDialog md = new MessageDialog(null, 0, MessageType.ERROR,
+                var md = new MessageDialog(null, 0, MessageType.ERROR,
                   ButtonsType.OK, "Failed to load default theme.");
                 md.run();
                 md.destroy();
@@ -271,7 +271,7 @@ public class NamebarPlugin : PanelPlugin {
         notify.connect(property_changed);
         menu_show_configure();
         configure_plugin.connect(() => {
-            PrefDialog pd = new PrefDialog(this);
+            var pd = new PrefDialog(this);
             pd.run();
             pd.destroy();
         });
@@ -367,9 +367,9 @@ public class NamebarPlugin : PanelPlugin {
 
             // Iterate through in reverse.
             if (window_stack.length() > 1) {
-                for (uint i = window_stack.length() - 1; i >= 1; i--) {
+                for (var i = window_stack.length() - 1; i >= 1; i--) {
                     // Check the window, and if it fits, set it.
-                    Wnck.Window w = window_stack.nth_data(i);
+                    var w = window_stack.nth_data(i);
                     if (w.is_visible_on_workspace(screen.get_active_workspace())
                      && w.is_maximized() && !w.is_skip_tasklist() &&
                      (w.get_window_type() == Wnck.WindowType.NORMAL ||
@@ -454,7 +454,7 @@ public class NamebarPlugin : PanelPlugin {
             keyfile.set_string("Namebar", "theme", theme.path);
             FileUtils.set_contents(save_location(true), keyfile.to_data(null));
         } catch {
-            stdout.printf("Couldn't save configuration.\n");
+            stderr.printf("Couldn't save configuration.\n");
         }
     }
 
@@ -551,7 +551,7 @@ public class NamebarPlugin : PanelPlugin {
             return false;
         }
 
-        Image img = (sender as EventBox).get_child() as Image;
+        var img = (sender as EventBox).get_child() as Image;
         set_button_state(img, ButtonState.HOVER);
         return true;
     }
@@ -563,7 +563,7 @@ public class NamebarPlugin : PanelPlugin {
             return false;
         }
 
-        Image img = (sender as EventBox).get_child() as Image;
+        var img = (sender as EventBox).get_child() as Image;
         set_button_state(img, ButtonState.NORMAL);
         return true;
     }

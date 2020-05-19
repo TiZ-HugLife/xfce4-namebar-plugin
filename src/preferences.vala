@@ -123,7 +123,7 @@ class PrefDialog : Dialog {
         var theme_label = new Label("Theme:");
         theme_combo = new ComboBoxText();
         themes = find_themes();
-        for (uint8 i = 0; i < themes.length(); i++) {
+        for (var i = 0; i < themes.length(); i++) {
             theme_combo.append_text(themes.nth_data(i).name);
             if (namebar.theme.name == themes.nth_data(i).name) {
                 theme_combo.active = i;
@@ -175,15 +175,6 @@ class PrefDialog : Dialog {
         custom_check.active = namebar.custom_colors;
         active_check.active = namebar.active_bold;
         passive_check.active = namebar.passive_bold;
-        //var color = Gdk.RGBA();
-        //color.red = namebar.active_color.red;
-        //color.green = namebar.active_color.green;
-        //color.blue = namebar.active_color.blue;
-        //active_color.rgba = color;
-        //color.red = namebar.passive_color.red;
-        //color.green = namebar.passive_color.green;
-        //color.blue = namebar.passive_color.blue;
-        //passive_color.rgba = color;
         active_color.rgba = namebar.active_color;
         passive_color.rgba = namebar.passive_color;
 
@@ -224,15 +215,6 @@ class PrefDialog : Dialog {
         custom_check.toggled.connect(() => {
             namebar.custom_colors = custom_check.active;
             if (namebar.custom_colors) {
-                //var new_color = Gdk.RGBA();
-                //new_color.red = active_color.rgba.red;
-                //new_color.green = active_color.rgba.green;
-                //new_color.blue = active_color.rgba.blue;
-                //namebar.active_color = new_color;
-                //new_color.red = passive_color.rgba.red;
-                //new_color.green = passive_color.rgba.green;
-                //new_color.blue = passive_color.rgba.blue;
-                //namebar.passive_color = new_color;
                 namebar.active_color = active_color.rgba;
                 namebar.passive_color = passive_color.rgba;
             } else {
@@ -241,18 +223,10 @@ class PrefDialog : Dialog {
             }
         });
         active_color.color_set.connect(() => {
-            //var new_color = Gdk.RGBA();
-            //new_color.red = active_color.rgba.red;
-            //new_color.green = active_color.rgba.green;
-            //new_color.blue = active_color.rgba.blue;
             var new_color = active_color.rgba;
             if (namebar.custom_colors) namebar.active_color = new_color;
         });
         passive_color.color_set.connect(() => {
-            //var new_color = Gdk.RGBA();
-            //new_color.red = passive_color.rgba.red;
-            //new_color.green = passive_color.rgba.green;
-            //new_color.blue = passive_color.rgba.blue;
             var new_color = passive_color.rgba;
             if (namebar.custom_colors) namebar.passive_color = new_color;
         });
@@ -279,15 +253,15 @@ class PrefDialog : Dialog {
 
     // Find all the themes on the system.
     private List<Theme> find_themes () {
-        List<Theme> list = new List<Theme>();
+        var list = new List<Theme>();
 
         // Get all the candidate dirs ready.
-        string[] dir_strings = Environment.get_system_data_dirs();
+        var dir_strings = Environment.get_system_data_dirs();
         dir_strings += Environment.get_user_data_dir();
-        File[] dirs = new File[dir_strings.length];
+        var dirs = new File[dir_strings.length];
 
         // Iterate through each directory to load its themes.
-        for (uint8 i = 0; i < dirs.length; i++) {
+        for (var i = 0; i < dirs.length; i++) {
             // Create the file object for the theme subdirectory.
             dirs[i] = File.new_for_path(dir_strings[i]).get_child("namebar/themes");
 
@@ -295,7 +269,7 @@ class PrefDialog : Dialog {
             if (dirs[i].query_exists(null)) {
                 try {
                     // Get an enumerator for the directory.
-                    FileEnumerator enumerator = dirs[i].enumerate_children(
+                    var enumerator = dirs[i].enumerate_children(
                       FileAttribute.STANDARD_NAME, 0, null);
 
                     // Iterate through all the children and try to

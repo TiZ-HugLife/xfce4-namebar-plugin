@@ -61,15 +61,15 @@ public class Theme : Object {
         string[] but_states = { "normal", "prelight", "pressed" };
 
         // Iterate through each button and load it.
-        for (uint8 a = 0; a < 2; a++)
-        for (uint8 b = 0; b < 4; b++)
-        for (uint8 c = 0; c < 3; c++) {
+        for (var a = 0; a < 2; a++)
+        for (var b = 0; b < 4; b++)
+        for (var c = 0; c < 3; c++) {
             // Create file object for the current image.
             File buf_file = dir.get_child(win_states[a]).get_child(buttons[b] +
               "_" + but_states[c] + ".png");
 
             // Create index based on position in loop.
-            uint8 i = (a * 12) + (b * 3) + c;
+            var i = (a * 12) + (b * 3) + c;
 
             try {
                 // Try loading it into a pixbuf.
@@ -109,7 +109,7 @@ public class Theme : Object {
     // Gets a pixbuf from the loaded theme.
     public Pixbuf get_pixbuf (bool active, ThemeButton tb, ButtonState bs) {
         // Create the index.
-        uint8 i = (active ? 0 : 12) + tb + bs;
+        var i = (active ? 0 : 12) + tb + bs;
         return pixbufs[i];
     }
 
