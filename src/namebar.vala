@@ -295,9 +295,9 @@ public class NamebarPlugin : PanelPlugin {
         var col = (active ? active_color : passive_color);
         var al = new AttrList();
         al.insert(attr_foreground_new(
-         (uint16)(65535u / col.red),
-         (uint16)(65535u / col.green),
-         (uint16)(65535u / col.blue) ));
+         (uint16)(65535u * col.red),
+         (uint16)(65535u * col.green),
+         (uint16)(65535u * col.blue) ));
         al.insert(attr_weight_new((bold ? Weight.BOLD : Weight.NORMAL)));
         title_label.set_attributes(al);
         title_label.set_alignment(align_float, 0.5f);
