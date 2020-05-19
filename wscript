@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 
 APPNAME = 'xfce4-namebar-plugin'
-VERSION = '0.3.4'
+VERSION = '1.0.0'
 
 top = '.'
 out = 'build'
@@ -32,13 +32,13 @@ def options (ctx):
 def configure (ctx):
 	ctx.load('compiler_c vala')
 	args = '--cflags --libs'
-	ctx.check_cfg(package = 'glib-2.0', atleast_version = '2.10',
+	ctx.check_cfg(package = 'glib-2.0', atleast_version = '2.62',
 		uselib_store = 'GLIB', mandatory = True, args = args)
-	ctx.check_cfg(package = 'gtk+-2.0', atleast_version = '2.16',
+	ctx.check_cfg(package = 'gtk+-3.0', atleast_version = '3.24',
 		uselib_store = 'GTK', mandatory = True, args = args)
-	ctx.check_cfg(package = 'libxfce4panel-1.0', atleast_version = '4.6',
+	ctx.check_cfg(package = 'libxfce4panel-2.0', atleast_version = '4.12',
 		uselib_store = 'XFCE4PANEL', mandatory = True, args = args)
-	ctx.check_cfg(package = 'libwnck-1.0', atleast_version = '2.20',
+	ctx.check_cfg(package = 'libwnck-3.0', atleast_version = '3.24',
 		uselib_store = 'LIBWNCK', mandatory = True, args = args)
 
 def build (ctx):
@@ -46,7 +46,7 @@ def build (ctx):
 		features     = 'c cshlib',
 		vapi_dirs    = 'vapi',
 		source       = ctx.path.ant_glob('src/*'),
-		packages     = 'glib-2.0 gtk+-2.0 libxfce4panel-1.0 libwnck-1.0',
+		packages     = 'glib-2.0 gtk+-3.0 libxfce4panel-2.0 libwnck-3.0',
 		target       = 'namebar',
 		install_path = '${LIBDIR}/xfce4/panel/plugins/',
 		uselib       = 'GLIB GTK XFCE4PANEL LIBWNCK',

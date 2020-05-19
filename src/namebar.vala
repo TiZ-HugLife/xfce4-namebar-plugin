@@ -50,32 +50,34 @@ public class NamebarPlugin : PanelPlugin {
     public bool   hide_close      { get; set; default = false; }
     public bool   hide_icon       { get; set; default = false; }
     public bool   hide_title      { get; set; default = false; }
-    public int    size            { get; set; default = 240; }
-    public bool   expand          { get; set; default = true; }
+    public int    nb_size            { get; set; default = 240; }
+    public bool   nb_expand          { get; set; default = true; }
     public uint8  align           { get; set; default = 1; }
     public bool   active_bold     { get; set; default = true; }
     public bool   passive_bold    { get; set; default = true; }
     public bool   custom_colors   { get; set; default = true; }
-    public Color  active_color    { get; set; }
-    public Color  passive_color   { get; set; }
+    public Gdk.RGBA   active_color    { get; set; }
+    public Gdk.RGBA   passive_color   { get; set; }
     public Theme  theme           { get; set; }
 
-    public Color active_default { get {
-        Color col = Color();
-        Gtk.Style style = get_style();
-        col.red = style.fg[StateType.NORMAL].red;
-        col.green = style.fg[StateType.NORMAL].green;
-        col.blue = style.fg[StateType.NORMAL].blue;
-        return col;
+    public Gdk.RGBA active_default { get {
+        //var col = Gdk.RGBA();
+        //var style = get_style_context();
+        //col.red = style.fg[StateType.NORMAL].red;
+        //col.green = style.fg[StateType.NORMAL].green;
+        //col.blue = style.fg[StateType.NORMAL].blue;
+        //return col;
+        return get_style_context().get_color(StateFlags.NORMAL);
     } }
     
-    public Color passive_default { get {
-        Color col = Color();
-        Gtk.Style style = get_style();
-        col.red = style.fg[StateType.INSENSITIVE].red;
-        col.green = style.fg[StateType.INSENSITIVE].green;
-        col.blue = style.fg[StateType.INSENSITIVE].blue;
-        return col;
+    public Gdk.RGBA passive_default { get {
+        //var col = Gdk.RGBA();
+        //var fg = get_style_context().get_color(StateFlags.INSENSITIVE);
+        //col.red = fg.red;
+        //col.green = fg.green;
+        //col.blue = fg.blue;
+        //return col;
+        return get_style_context().get_color(StateFlags.INSENSITIVE);
     } }
     
     public float align_float { get {
@@ -96,7 +98,7 @@ public class NamebarPlugin : PanelPlugin {
     private unowned Wnck.Window active_window;
 
     // Gtk widgets.
-    private HBox box;
+    private Box box;
     private Image window_icon;
     private Image minimize_icon;
     private Image max_res_icon;
@@ -108,12 +110,6 @@ public class NamebarPlugin : PanelPlugin {
     // Constructor
     ///////////////////
 
-    // Fake constructor, gets rid of warning.
-    public NamebarPlugin () {
-        GLib.Object();
-    }
-
-    // Real constructor!
     public override void @construct () {
         // Default colors.
         active_color = active_default;
@@ -151,8 +147,8 @@ public class NamebarPlugin : PanelPlugin {
         } catch { }
         try {
             only_max = keyfile.get_boolean("Namebar", "only_max");
-            size = keyfile.get_integer("Namebar", "size");
-            expand = keyfile.get_boolean("Namebar", "expand");
+            nb_size = keyfile.get_integer("Namebar", "size");
+            nb_expand = keyfile.get_boolean("Namebar", "expand");
             align = (uint8)keyfile.get_integer("Namebar", "align");
             active_bold = keyfile.get_boolean("Namebar", "active_bold");
             passive_bold = keyfile.get_boolean("Namebar", "passive_bold");
@@ -162,9 +158,9 @@ public class NamebarPlugin : PanelPlugin {
             hide_icon = keyfile.get_boolean("Namebar", "hide_icon");
             hide_title = keyfile.get_boolean("Namebar", "hide_title");
             custom_colors = keyfile.get_boolean("Namebar", "custom_colors");
-            string ac = keyfile.get_string("Namebar", "active_color");
-            string pc = keyfile.get_string("Namebar", "passive_color");
-            string theme_path = keyfile.get_string("Namebar", "theme");
+            var ac = keyfile.get_string("Namebar", "active_color");
+            var pc = keyfile.get_string("Namebar", "passive_color");
+            var theme_path = keyfile.get_string("Namebar", "theme");
 
             if (custom_colors) {
                 active_color.parse(ac);
@@ -180,7 +176,7 @@ public class NamebarPlugin : PanelPlugin {
             // Look for the default theme.
             string[] dirs = Environment.get_system_data_dirs();
             dirs += Environment.get_user_data_dir();
-            bool theme_loaded = false;
+            var theme_loaded = false;
             for (uint8 i = 0; i < dirs.length && !theme_loaded; i++) {
                 File tf = File.new_for_path(dirs[i]).get_child(
                   "namebar/themes/Default");
@@ -207,14 +203,14 @@ public class NamebarPlugin : PanelPlugin {
         screen.force_update();
 
         // Window icon.
-        EventBox eb1 = new EventBox();
+        var eb1 = new EventBox();
         eb1.visible_window = false;
         window_icon = new Image();
         eb1.add(window_icon);
         eb1.no_show_all = hide_icon;
 
         // Title label.
-        EventBox eb2 = new EventBox();
+        var eb2 = new EventBox();
         eb2.visible_window = false;
         title_label = new Label(null);
         title_label.set_alignment(align_float, 0.5f);
@@ -223,21 +219,21 @@ public class NamebarPlugin : PanelPlugin {
         eb2.no_show_all = hide_title;
 
         // Minimize button.
-        EventBox eb3 = new EventBox();
+        var eb3 = new EventBox();
         eb3.visible_window = false;
         minimize_icon = new Image();
         eb3.add(minimize_icon);
         eb3.no_show_all = hide_min;
 
         // Maximize/Restore button.
-        EventBox eb4 = new EventBox();
+        var eb4 = new EventBox();
         eb4.visible_window = false;
         max_res_icon = new Image();
         eb4.add(max_res_icon);
         eb4.no_show_all = hide_max;
 
         // Close button.
-        EventBox eb5 = new EventBox();
+        var eb5 = new EventBox();
         eb5.visible_window = false;
         close_icon = new Image();
         eb5.add(close_icon);
@@ -245,10 +241,10 @@ public class NamebarPlugin : PanelPlugin {
 
         // Create EventBox and the box. This is so the plugin
         // can still be configured even when the box is hidden.
-        EventBox ebox = new EventBox();
+        var ebox = new EventBox();
         ebox.show();
         ebox.visible_window = false;
-        box = new HBox(false, 0);
+        box = new Box(Orientation.HORIZONTAL, 0);
         box.spacing = 0;
         box.pack_start(eb1, false, false, 2);
         box.pack_start(eb2, true, true, 2);
@@ -259,8 +255,8 @@ public class NamebarPlugin : PanelPlugin {
         // Pack it all in.
         ebox.add(box);
         add(ebox);
-        set_size_request(size > 0 ? size : -1, -1);
-        set_expand(expand);
+        set_size_request(nb_size > 0 ? nb_size : -1, -1);
+        set_expand(nb_expand);
 
         // Connect signals.
         screen.active_window_changed.connect(active_window_changed);
@@ -306,11 +302,14 @@ public class NamebarPlugin : PanelPlugin {
         set_button_state(minimize_icon, ButtonState.NORMAL);
         set_button_state(max_res_icon, ButtonState.NORMAL);
         set_button_state(close_icon, ButtonState.NORMAL);
-        bool active = shown_window.is_active();
-        bool bold = (active ? active_bold : passive_bold);
-        Color col = (active ? active_color : passive_color);
-        AttrList al = new AttrList();
-        al.insert(attr_foreground_new(col.red, col.green, col.blue));
+        var active = shown_window.is_active();
+        var bold = (active ? active_bold : passive_bold);
+        var col = (active ? active_color : passive_color);
+        var al = new AttrList();
+        al.insert(attr_foreground_new(
+         (uint16)(65535 / col.red),
+         (uint16)(65535 / col.green),
+         (uint16)(65535 / col.blue) ));
         al.insert(attr_weight_new((bold ? Weight.BOLD : Weight.NORMAL)));
         title_label.set_attributes(al);
         title_label.set_alignment(align_float, 0.5f);
@@ -358,7 +357,7 @@ public class NamebarPlugin : PanelPlugin {
         shown_window = null;
 
         // Hide everything in the box.
-        box.hide_all();
+        box.hide();
     }
 
     // Finds a window to show.
@@ -401,7 +400,7 @@ public class NamebarPlugin : PanelPlugin {
     // Sets the state of a button.
     private void set_button_state (Image img, ButtonState bs) {
         // Get stuff ready.
-        bool active = shown_window.is_active();
+        var active = shown_window.is_active();
         ThemeButton tb;
 
         // Determine which button we're on.
@@ -426,12 +425,12 @@ public class NamebarPlugin : PanelPlugin {
     // Emitted when a property changes.
     private void property_changed () {
         // Immediately reflect the changes.
-        set_size_request(size > 0 ? size : -1, -1);
-        set_expand(expand);
+        set_size_request(nb_size > 0 ? nb_size : -1, -1);
+        set_expand(nb_expand);
         title_label.set_alignment(align_float, 0.5f);
 
         // Set visibility of each element.
-        EventBox eb = window_icon.parent as EventBox;
+        var eb = window_icon.parent as EventBox;
         eb.visible = !(eb.no_show_all = hide_icon);
         eb = title_label.parent as EventBox;
         eb.visible = !(eb.no_show_all = hide_title);
@@ -446,7 +445,7 @@ public class NamebarPlugin : PanelPlugin {
         find_window_to_show();
 
         // Save the properties to the keyfile.
-        KeyFile keyfile = new KeyFile();
+        var keyfile = new KeyFile();
         try {
             keyfile.set_boolean("Namebar", "only_max", only_max);
             keyfile.set_boolean("Namebar", "hide_icon", hide_icon);
@@ -454,8 +453,8 @@ public class NamebarPlugin : PanelPlugin {
             keyfile.set_boolean("Namebar", "hide_min", hide_min);
             keyfile.set_boolean("Namebar", "hide_max", hide_max);
             keyfile.set_boolean("Namebar", "hide_close", hide_close);
-            keyfile.set_integer("Namebar", "size", size);
-            keyfile.set_boolean("Namebar", "expand", expand);
+            keyfile.set_integer("Namebar", "size", nb_size);
+            keyfile.set_boolean("Namebar", "expand", nb_expand);
             keyfile.set_integer("Namebar", "align", align);
             keyfile.set_boolean("Namebar", "active_bold", active_bold);
             keyfile.set_boolean("Namebar", "passive_bold", passive_bold);
@@ -519,7 +518,7 @@ public class NamebarPlugin : PanelPlugin {
         }
 
         // Set title label and its tooltip.
-        string name = shown_window.get_name();
+        var name = shown_window.get_name();
         title_label.label = name;
         title_label.tooltip_text = name;
     }
@@ -564,7 +563,7 @@ public class NamebarPlugin : PanelPlugin {
             return false;
         }
 
-        Image img = (sender as EventBox).child as Image;
+        Image img = (sender as EventBox).get_child() as Image;
         set_button_state(img, ButtonState.HOVER);
         return true;
     }
@@ -576,7 +575,7 @@ public class NamebarPlugin : PanelPlugin {
             return false;
         }
 
-        Image img = (sender as EventBox).child as Image;
+        Image img = (sender as EventBox).get_child() as Image;
         set_button_state(img, ButtonState.NORMAL);
         return true;
     }
@@ -590,7 +589,7 @@ public class NamebarPlugin : PanelPlugin {
         }
 
         if (event.button == 1) {
-            Image img = (sender as EventBox).child as Image;
+            Image img = (sender as EventBox).get_child() as Image;
             set_button_state(img, ButtonState.PRESSED);
         }
         return true;
@@ -604,20 +603,19 @@ public class NamebarPlugin : PanelPlugin {
         }
 
         // Preparation for below check.
-        int x, y;
-        sender.get_pointer(out x, out y);
-        Allocation a = sender.allocation;
+        int x, y, b; Gdk.ModifierType mask; Allocation a;
+        var dev = Gdk.Display.get_default().get_default_seat().get_pointer();
+        sender.get_window().get_device_position(dev, out x, out y, out mask);
+        sender.get_allocated_size(out a, out b);
 
-        // Abort method if the main button wasn't released
-        // inside the event box.
+        // Abort method if the main button was released outside the event box.
         if (x < 0 || y < 0 || x > a.width || y > a.height ||
           event.button != 1) {
             return false;
         }
 
-        // Determine what to do based on which icon was
-        // clicked and do it.
-        Image img = (sender as EventBox).child as Image;
+        // Determine what to do based on which icon was clicked and do it.
+        Image img = (sender as EventBox).get_child() as Image;
         if (img == minimize_icon) {
             shown_window.minimize();
         } else if (img == close_icon) {
@@ -643,12 +641,12 @@ public class NamebarPlugin : PanelPlugin {
         }
 
         // Preparation for below check.
-        int x, y;
-        sender.get_pointer(out x, out y);
-        Allocation a = sender.allocation;
+        int x, y, b; Gdk.ModifierType mask; Allocation a;
+        var dev = Gdk.Display.get_default().get_default_seat().get_pointer();
+        sender.get_window().get_device_position(dev, out x, out y, out mask);
+        sender.get_allocated_size(out a, out b);
 
-        // Abort method if the main button wasn't released
-        // inside the event box.
+        // Abort method if the main button was released outside the event box.
         if (x < 0 || y < 0 || x > a.width ||
          y > a.height || event.button != 1) {
             return false;

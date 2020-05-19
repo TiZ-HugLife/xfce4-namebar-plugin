@@ -42,8 +42,8 @@ class PrefDialog : Dialog {
     private CheckButton   close_check;
     private SpinButton    size_spin;
     private CheckButton   expand_check;
-    private ComboBox      align_combo;
-    private ComboBox      theme_combo;
+    private ComboBoxText  align_combo;
+    private ComboBoxText  theme_combo;
     private CheckButton   custom_check;
     private ColorButton   active_color;
     private ColorButton   passive_color;
@@ -64,12 +64,12 @@ class PrefDialog : Dialog {
         });
 
         // Now let's make some widgets.
-        unowned VBox content = get_content_area() as VBox;
+        unowned Box content = get_content_area() as Box;
         content.spacing = 8;
 
         // Title settings.
-        VBox title_box = new VBox(false, 0);
-        Label title_label = new Label("<big>Show window title</big>");
+        var title_box = new Box(Orientation.VERTICAL, 0);
+        var title_label = new Label("<big>Show window title</big>");
         title_label.set_alignment(0.0f, 0.5f);
         title_label.use_markup = true;
         active_radio = new RadioButton.with_label(null, "Active window");
@@ -81,8 +81,8 @@ class PrefDialog : Dialog {
         content.pack_start(title_box, false, false, 0);
 
         // Maximize/Restore button settings.
-        VBox hide_box = new VBox(false, 0);
-        Label hide_label = new Label("<big>Hide Namebar elements</big>");
+        var hide_box = new Box(Orientation.VERTICAL, 0);
+        var hide_label = new Label("<big>Hide Namebar elements</big>");
         hide_label.set_alignment(0.0f, 0.5f);
         hide_label.use_markup = true;
         icon_check = new CheckButton.with_label("Icon");
@@ -99,18 +99,18 @@ class PrefDialog : Dialog {
         content.pack_start(hide_box, false, false, 0);
 
         // Size settings.
-        HBox size_box = new HBox(false, 2);
-        Label size_label = new Label("Size:");
-        Adjustment adj = new Adjustment(0, -1, 2000, 1, 50, 0);
+        var size_box = new Box(Orientation.HORIZONTAL, 2);
+        var size_label = new Label("Size:");
+        var adj = new Adjustment(0, -1, 2000, 1, 50, 0);
         size_spin = new SpinButton(adj, 0.5, 0);
         expand_check = new CheckButton.with_label("Expand");
         size_box.pack_start(size_label, false, false, 0);
         size_box.pack_start(size_spin, false, false, 0);
         size_box.pack_start(expand_check, false, false, 0);
         content.pack_start(size_box, false, false, 0);
-        HBox align_box = new HBox(false, 2);
+        var align_box = new Box(Gtk.Orientation.HORIZONTAL, 2);
         Label align_label = new Label("Align:");
-        align_combo = new ComboBox.text();
+        align_combo = new ComboBoxText();
         align_combo.append_text("Left");
         align_combo.append_text("Center");
         align_combo.append_text("Right");
@@ -119,9 +119,9 @@ class PrefDialog : Dialog {
         content.pack_start(align_box, false, false, 0);
 
         // Theme settings.
-        HBox theme_box = new HBox(false, 2);
-        Label theme_label = new Label("Theme:");
-        theme_combo = new ComboBox.text();
+        var theme_box = new Box(Orientation.HORIZONTAL, 2);
+        var theme_label = new Label("Theme:");
+        theme_combo = new ComboBoxText();
         themes = find_themes();
         for (uint8 i = 0; i < themes.length(); i++) {
             theme_combo.append_text(themes.nth_data(i).name);
@@ -136,28 +136,28 @@ class PrefDialog : Dialog {
         // Color settings.
         custom_check = new CheckButton.with_label("Custom colors");
         content.pack_start(custom_check, false, false, 0);
-        Table color_table = new Table(2, 4, false);
-        Label active_label = new Label("Active color:");
+        var color_grid = new Grid();
+        var active_label = new Label("Active color:");
         active_label.set_alignment(0.0f, 0.5f);
         active_color = new ColorButton();
-        Button active_reset = new Button();
-        active_reset.add(new Image.from_stock(Stock.CLEAR, IconSize.BUTTON));
+        var active_reset = new Button();
+        active_reset.add(new Image.from_icon_name("clear", IconSize.BUTTON));
         active_check = new CheckButton.with_label("Bold");
-        Label passive_label = new Label("Passive color:");
+        var passive_label = new Label("Passive color:");
         passive_label.set_alignment(0.0f, 0.5f);
         passive_color = new ColorButton();
-        Button passive_reset = new Button();
-        passive_reset.add(new Image.from_stock(Stock.CLEAR, IconSize.BUTTON));
+        var passive_reset = new Button();
+        passive_reset.add(new Image.from_icon_name("clear", IconSize.BUTTON));
         passive_check = new CheckButton.with_label("Bold");
-        color_table.attach(active_label, 0, 1, 0, 1, 0, 0, 0, 0);
-        color_table.attach(active_color, 1, 2, 0, 1, 0, 0, 0, 0);
-        color_table.attach(active_reset, 2, 3, 0, 1, 0, 0, 0, 0);
-        color_table.attach(active_check, 3, 4, 0, 1, 0, 0, 0, 0);
-        color_table.attach(passive_label, 0, 1, 1, 2, 0, 0, 0, 0);
-        color_table.attach(passive_color, 1, 2, 1, 2, 0, 0, 0, 0);
-        color_table.attach(passive_reset, 2, 3, 1, 2, 0, 0, 0, 0);
-        color_table.attach(passive_check, 3, 4, 1, 2, 0, 0, 0, 0);
-        content.pack_start(color_table, false, false, 0);
+        color_grid.attach(active_label, 0, 1, 0, 1);
+        color_grid.attach(active_color, 1, 2, 0, 1);
+        color_grid.attach(active_reset, 2, 3, 0, 1);
+        color_grid.attach(active_check, 3, 4, 0, 1);
+        color_grid.attach(passive_label, 0, 1, 1, 2);
+        color_grid.attach(passive_color, 1, 2, 1, 2);
+        color_grid.attach(passive_reset, 2, 3, 1, 2);
+        color_grid.attach(passive_check, 3, 4, 1, 2);
+        content.pack_start(color_grid, false, false, 0);
 
         // Get current settings.
         active_radio.active = !namebar.only_max;
@@ -167,21 +167,23 @@ class PrefDialog : Dialog {
         min_check.active = namebar.hide_min;
         max_check.active = namebar.hide_max;
         close_check.active = namebar.hide_close;
-        size_spin.value = namebar.size;
-        expand_check.active = namebar.expand;
+        size_spin.value = namebar.nb_size;
+        expand_check.active = namebar.nb_expand;
         align_combo.active = namebar.align;
         custom_check.active = namebar.custom_colors;
         active_check.active = namebar.active_bold;
         passive_check.active = namebar.passive_bold;
-        Gdk.Color color = Gdk.Color();
-        color.red = namebar.active_color.red;
-        color.green = namebar.active_color.green;
-        color.blue = namebar.active_color.blue;
-        active_color.color = color;
-        color.red = namebar.passive_color.red;
-        color.green = namebar.passive_color.green;
-        color.blue = namebar.passive_color.blue;
-        passive_color.color = color;
+        //var color = Gdk.RGBA();
+        //color.red = namebar.active_color.red;
+        //color.green = namebar.active_color.green;
+        //color.blue = namebar.active_color.blue;
+        //active_color.rgba = color;
+        //color.red = namebar.passive_color.red;
+        //color.green = namebar.passive_color.green;
+        //color.blue = namebar.passive_color.blue;
+        //passive_color.rgba = color;
+        active_color.rgba = namebar.active_color;
+        passive_color.rgba = namebar.passive_color;
 
         // Lambda functions for all the signals.
         active_radio.toggled.connect(() => {
@@ -206,10 +208,10 @@ class PrefDialog : Dialog {
             namebar.hide_close = close_check.active;
         });
         size_spin.value_changed.connect(() => {
-            namebar.size = (int)size_spin.value;
+            namebar.nb_size = (int)size_spin.value;
         });
         expand_check.toggled.connect(() => {
-            namebar.expand = expand_check.active;
+            namebar.nb_expand = expand_check.active;
         });
         theme_combo.changed.connect(() => {
             namebar.theme = themes.nth_data(theme_combo.active);
@@ -220,32 +222,36 @@ class PrefDialog : Dialog {
         custom_check.toggled.connect(() => {
             namebar.custom_colors = custom_check.active;
             if (namebar.custom_colors) {
-                Pango.Color new_color = Pango.Color();
-                new_color.red = active_color.color.red;
-                new_color.green = active_color.color.green;
-                new_color.blue = active_color.color.blue;
-                namebar.active_color = new_color;
-                new_color.red = passive_color.color.red;
-                new_color.green = passive_color.color.green;
-                new_color.blue = passive_color.color.blue;
-                namebar.passive_color = new_color;
+                //var new_color = Gdk.RGBA();
+                //new_color.red = active_color.rgba.red;
+                //new_color.green = active_color.rgba.green;
+                //new_color.blue = active_color.rgba.blue;
+                //namebar.active_color = new_color;
+                //new_color.red = passive_color.rgba.red;
+                //new_color.green = passive_color.rgba.green;
+                //new_color.blue = passive_color.rgba.blue;
+                //namebar.passive_color = new_color;
+                namebar.active_color = active_color.rgba;
+                namebar.passive_color = passive_color.rgba;
             } else {
                 namebar.active_color = namebar.active_default;
                 namebar.passive_color = namebar.passive_default;
             }
         });
         active_color.color_set.connect(() => {
-            Pango.Color new_color = Pango.Color();
-            new_color.red = active_color.color.red;
-            new_color.green = active_color.color.green;
-            new_color.blue = active_color.color.blue;
+            //var new_color = Gdk.RGBA();
+            //new_color.red = active_color.rgba.red;
+            //new_color.green = active_color.rgba.green;
+            //new_color.blue = active_color.rgba.blue;
+            var new_color = active_color.rgba;
             if (namebar.custom_colors) namebar.active_color = new_color;
         });
         passive_color.color_set.connect(() => {
-            Pango.Color new_color = Pango.Color();
-            new_color.red = passive_color.color.red;
-            new_color.green = passive_color.color.green;
-            new_color.blue = passive_color.color.blue;
+            //var new_color = Gdk.RGBA();
+            //new_color.red = passive_color.rgba.red;
+            //new_color.green = passive_color.rgba.green;
+            //new_color.blue = passive_color.rgba.blue;
+            var new_color = passive_color.rgba;
             if (namebar.custom_colors) namebar.passive_color = new_color;
         });
         active_reset.clicked.connect(() => {
@@ -260,7 +266,7 @@ class PrefDialog : Dialog {
         });
 
         // Finish up.
-        add_button(Stock.CLOSE, ResponseType.CLOSE);
+        add_button("Close", ResponseType.CLOSE);
         show_all();
     }
 
@@ -288,7 +294,7 @@ class PrefDialog : Dialog {
                 try {
                     // Get an enumerator for the directory.
                     FileEnumerator enumerator = dirs[i].enumerate_children(
-                      FILE_ATTRIBUTE_STANDARD_NAME, 0, null);
+                      FileAttribute.STANDARD_NAME, 0, null);
 
                     // Iterate through all the children and try to
                     // load the themes in each. If successful, add
