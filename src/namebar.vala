@@ -61,22 +61,10 @@ public class NamebarPlugin : PanelPlugin {
     public Theme  theme           { get; set; }
 
     public Gdk.RGBA active_default { get {
-        //var col = Gdk.RGBA();
-        //var style = get_style_context();
-        //col.red = style.fg[StateType.NORMAL].red;
-        //col.green = style.fg[StateType.NORMAL].green;
-        //col.blue = style.fg[StateType.NORMAL].blue;
-        //return col;
         return get_style_context().get_color(StateFlags.NORMAL);
     } }
     
     public Gdk.RGBA passive_default { get {
-        //var col = Gdk.RGBA();
-        //var fg = get_style_context().get_color(StateFlags.INSENSITIVE);
-        //col.red = fg.red;
-        //col.green = fg.green;
-        //col.blue = fg.blue;
-        //return col;
         return get_style_context().get_color(StateFlags.INSENSITIVE);
     } }
     
@@ -307,9 +295,9 @@ public class NamebarPlugin : PanelPlugin {
         var col = (active ? active_color : passive_color);
         var al = new AttrList();
         al.insert(attr_foreground_new(
-         (uint16)(65535 / col.red),
-         (uint16)(65535 / col.green),
-         (uint16)(65535 / col.blue) ));
+         (uint16)(65535u / col.red),
+         (uint16)(65535u / col.green),
+         (uint16)(65535u / col.blue) ));
         al.insert(attr_weight_new((bold ? Weight.BOLD : Weight.NORMAL)));
         title_label.set_attributes(al);
         title_label.set_alignment(align_float, 0.5f);
@@ -582,44 +570,41 @@ public class NamebarPlugin : PanelPlugin {
 
 
     // Changes the icon once a button is pressed.
-    private bool button_pressed (Widget sender, Gdk.EventButton event) {
+    private bool button_pressed (Widget sender, Gdk.EventButton ev) {
         // Prevent wnck assertion failure messages.
         if (shown_window == null) {
             return false;
         }
 
-        if (event.button == 1) {
-            Image img = (sender as EventBox).get_child() as Image;
+        if (ev.button == 1) {
+            var img = (sender as EventBox).get_child() as Image;
             set_button_state(img, ButtonState.PRESSED);
         }
         return true;
     }
 
-    // Performs an action when an button is released.
-    private bool button_released (Widget sender, Gdk.EventButton event) {
+    // Performs an action when a button is released.
+    private bool button_released (Widget sender, Gdk.EventButton ev) {
         // Prevent wnck assertion failure messages.
         if (shown_window == null) {
             return false;
         }
 
         // Preparation for below check.
-        int x, y, b; Gdk.ModifierType mask; Allocation a;
-        var dev = Gdk.Display.get_default().get_default_seat().get_pointer();
-        sender.get_window().get_device_position(dev, out x, out y, out mask);
-        sender.get_allocated_size(out a, out b);
+        Allocation a;
+        sender.get_allocated_size(out a, null);
 
         // Abort method if the main button was released outside the event box.
-        if (x < 0 || y < 0 || x > a.width || y > a.height ||
-          event.button != 1) {
+        if (!(0 < ev.x < a.width && 0 < ev.y < a.height && ev.button == 1)) {
             return false;
         }
 
         // Determine what to do based on which icon was clicked and do it.
-        Image img = (sender as EventBox).get_child() as Image;
+        var img = (sender as EventBox).get_child() as Image;
         if (img == minimize_icon) {
             shown_window.minimize();
         } else if (img == close_icon) {
-            shown_window.close(event.time);
+            shown_window.close(ev.time);
         } else if (img == max_res_icon) {
             if (shown_window.is_maximized()) {
                 shown_window.unmaximize();
@@ -634,26 +619,23 @@ public class NamebarPlugin : PanelPlugin {
     }
 
     // Focuses the window when the title label is clicked.
-    private bool title_clicked (Widget sender, Gdk.EventButton event) {
+    private bool title_clicked (Widget sender, Gdk.EventButton ev) {
         // Prevent wnck assertion failure messages.
         if (shown_window == null) {
             return false;
         }
 
         // Preparation for below check.
-        int x, y, b; Gdk.ModifierType mask; Allocation a;
-        var dev = Gdk.Display.get_default().get_default_seat().get_pointer();
-        sender.get_window().get_device_position(dev, out x, out y, out mask);
-        sender.get_allocated_size(out a, out b);
+        Allocation a;
+        sender.get_allocated_size(out a, null);
 
         // Abort method if the main button was released outside the event box.
-        if (x < 0 || y < 0 || x > a.width ||
-         y > a.height || event.button != 1) {
+        if (!(0 < ev.x < a.width && 0 < ev.y < a.height && ev.button == 1)) {
             return false;
         }
 
         // Focus the window.
-        shown_window.activate(event.time);
+        shown_window.activate(ev.time);
         return true;
     }
 
